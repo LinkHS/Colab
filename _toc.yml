@@ -1,0 +1,29 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: README.md
+
+parts: 
+  - caption: Deep Learning
+    chapters:
+    - file: DETR/My_DETR.ipynb
+
+  - caption: 3D world
+    chapters:
+    - file: IMU/imu.ipynb
+    - file: IMU/Lidar_with_rotation.ipynb
+    - file: IMU/SO3_SE3_spatialmath.ipynb
+
+  - caption: Kalmanfilter
+    chapters:
+    - file: Kalmanfilter/Kalmanfilter_basics.ipynb
+    - file: Kalmanfilter/extended_kalman_filter_localization.ipynb
+    - file: Kalmanfilter/unscented_kalman_filter.ipynb
+
+  - caption: 3D Tools
+    chapters:
+    - file: Open3D/ICP.ipynb
+    - file: Open3D/Open3D_visualization.ipynb
+    - file: 3D_tools/pytransform3d.ipynb
+    - file: matplotlib/mplot3d.ipynb
