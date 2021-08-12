@@ -1,0 +1,800 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Extended Kalman Filter Localization &#8212; Austin&#39;s Notebook</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.e8e5499552300ddf5d7adccae7cc3b70.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Unscented Kalman Filter" href="unscented_kalman_filter.html" />
+    <link rel="prev" title="KF Basics - Part I" href="Kalmanfilter_basics.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Austin's Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../README.html">
+   Hello Jupyter
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Deep Learning
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../DETR/My_DETR.html">
+   My_DETR
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  3D world
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../IMU/imu.html">
+   IMU与车辆
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../IMU/Lidar_with_rotation.html">
+   Lidar with Rotation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../IMU/SO3_SE3_spatialmath.html">
+   SO3_SE3_spatialmath
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Kalmanfilter
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="Kalmanfilter_basics.html">
+   KF Basics - Part I
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Extended Kalman Filter Localization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="unscented_kalman_filter.html">
+   Unscented Kalman Filter
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  3D Tools
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Open3D/ICP.html">
+   ICP
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Open3D/Open3D_visualization.html">
+   Open3D Visualize in Google Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../3D_tools/pytransform3d.html">
+   pytransform3d
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../matplotlib/mplot3d.html">
+   Matplotlib
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/Kalmanfilter/extended_kalman_filter_localization.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/executablebooks/jupyter-book"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FKalmanfilter/extended_kalman_filter_localization.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/Kalmanfilter/extended_kalman_filter_localization.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#filter-design">
+   Filter design
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#motion-model">
+     Motion Model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#observation-model">
+     Observation Model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#extented-kalman-filter">
+     Extented Kalman Filter
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="extended-kalman-filter-localization">
+<h1>Extended Kalman Filter Localization<a class="headerlink" href="#extended-kalman-filter-localization" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.transform</span> <span class="kn">import</span> <span class="n">Rotation</span> <span class="k">as</span> <span class="n">Rot</span>
+
+<span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span>
+  <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># variance of location on x-axis</span>
+  <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># variance of location on y-axis</span>
+  <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span>  <span class="c1"># variance of yaw angle</span>
+  <span class="mf">1.0</span>  <span class="c1"># variance of velocity</span>
+<span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># predict state covariance</span>
+
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># Observation x,y position covariance</span>
+
+<span class="n">DT</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># time tick [s]</span>
+<span class="n">SIM_TIME</span> <span class="o">=</span> <span class="mf">50.0</span>  <span class="c1"># simulation time [s]</span>
+
+<span class="n">show_animation</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="filter-design">
+<h2>Filter design<a class="headerlink" href="#filter-design" title="Permalink to this headline">¶</a></h2>
+<p>In this simulation, the robot has a state vector includes 4 states at time <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\textbf{x}_t=[x_t, y_t, \phi_t, v_t]\]</div>
+<p>x, y are a 2D x-y position, <span class="math notranslate nohighlight">\(\phi\)</span> is orientation, and v is velocity.</p>
+<p>In the code, “xEst” means the state vector. <a class="reference external" href="https://github.com/AtsushiSakai/PythonRobotics/blob/916b4382de090de29f54538b356cef1c811aacce/Localization/extended_kalman_filter/extended_kalman_filter.py#L168">code</a></p>
+<p>And, <span class="math notranslate nohighlight">\(P_t\)</span> is covariace matrix of the state,</p>
+<p><span class="math notranslate nohighlight">\(Q\)</span> is covariance matrix of process noise,</p>
+<p><span class="math notranslate nohighlight">\(R\)</span> is covariance matrix of observation noise at time <span class="math notranslate nohighlight">\(t\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">x_state</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0.],
+       [0.],
+       [0.],
+       [2.]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The robot has a speed sensor and a gyro sensor.</p>
+<p>So, the input vecor can be used as each time step</p>
+<div class="math notranslate nohighlight">
+\[\textbf{u}_t=[v_t, \omega_t]\]</div>
+<p>Also, the robot has a GNSS sensor, it means that the robot can observe x-y position at each time.</p>
+<div class="math notranslate nohighlight">
+\[\textbf{z}_t=[x_t,y_t]\]</div>
+<p>The input and observation vector includes sensor noise.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_input</span><span class="p">():</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># [m/s]</span>
+    <span class="n">yawrate</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># [rad/s]</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">yawrate</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">u</span>
+
+<span class="n">u</span> <span class="o">=</span> <span class="n">calc_input</span><span class="p">()</span>
+<span class="n">u</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[1. ],
+       [0.1]])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="motion-model">
+<h3>Motion Model<a class="headerlink" href="#motion-model" title="Permalink to this headline">¶</a></h3>
+<p>The robot model is</p>
+<div class="math notranslate nohighlight">
+\[ \dot{x} = vcos(\phi)\]</div>
+<div class="math notranslate nohighlight">
+\[ \dot{y} = vsin((\phi)\]</div>
+<div class="math notranslate nohighlight">
+\[ \dot{\phi} = \omega\]</div>
+<p>Given that<br />
+<span class="math notranslate nohighlight">\(\textbf{x}_t = [x_t, y_t, \phi_t, v_t]\)</span></p>
+<p><span class="math notranslate nohighlight">\(\textbf{x}_{t+1}\)</span><br />
+<span class="math notranslate nohighlight">\(x_{t+1} = x_t + \dot{x}\Delta t\)</span><br />
+<span class="math notranslate nohighlight">\(y_{t+1} = y_t + \dot{y}\Delta t\)</span><br />
+<span class="math notranslate nohighlight">\(\phi_{t+1} = \phi_t + \dot{\phi}\Delta t\)</span><br />
+<span class="math notranslate nohighlight">\(v_{t+1} = 0 + v_{t+1}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\textbf{u}_t = [v_t, \dot{\phi}]\)</span></p>
+<p>So, the motion model is</p>
+<div class="math notranslate nohighlight">
+\[\textbf{x}_{t+1} = F\textbf{x}_t+B\textbf{u}_t\]</div>
+<p>where</p>
+<p><span class="math notranslate nohighlight">\(\begin{equation*}
+F=
+\begin{bmatrix}
+1 &amp; 0 &amp; 0 &amp; 0\\
+0 &amp; 1 &amp; 0 &amp; 0\\
+0 &amp; 0 &amp; 1 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 0 \\
+\end{bmatrix}
+\end{equation*}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\begin{equation*}
+B=
+\begin{bmatrix}
+cos(\phi)\Delta t &amp; 0\\
+sin(\phi)\Delta t &amp; 0\\
+0 &amp; \Delta t\\
+1 &amp; 0\\
+\end{bmatrix}
+\end{equation*}\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">motion_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+  <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span>  <span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">]])</span>
+  <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">dt</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="mi">0</span> <span class="p">],</span>
+          <span class="p">[</span><span class="n">dt</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="mi">0</span> <span class="p">],</span>
+          <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span>            <span class="n">dt</span> <span class="p">],</span>
+          <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span>            <span class="mf">0.0</span><span class="p">]])</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="nd">@x</span> <span class="o">+</span> <span class="n">B</span><span class="nd">@u</span>
+  <span class="k">return</span> <span class="n">x</span>
+
+<span class="c1"># x = 0 + v_u*cos(0)*dt = 0.1</span>
+<span class="c1"># y = 0 + v_u*sin(0)*dt = 0</span>
+<span class="c1"># yaw = v_yaw * dt = 0.01</span>
+<span class="c1"># v = v_u = 1</span>
+<span class="n">motion_model</span><span class="p">(</span><span class="n">x_state</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">DT</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0.1 ],
+       [0.  ],
+       [0.01],
+       [1.  ]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Its Jacobian matrix is</p>
+<p><span class="math notranslate nohighlight">\(\begin{equation*}
+J_F=
+\begin{bmatrix}
+\frac{dx}{dx}&amp; \frac{dx}{dy} &amp; \frac{dx}{d\phi} &amp;  \frac{dx}{dv}\\
+\frac{dy}{dx}&amp; \frac{dy}{dy} &amp; \frac{dy}{d\phi} &amp;  \frac{dy}{dv}\\
+\frac{d\phi}{dx}&amp; \frac{d\phi}{dy} &amp; \frac{d\phi}{d\phi} &amp;  \frac{d\phi}{dv}\\
+\frac{dv}{dx}&amp; \frac{dv}{dy} &amp; \frac{dv}{d\phi} &amp;  \frac{dv}{dv}\\
+\end{bmatrix}
+\end{equation*}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\begin{equation*}
+　=
+\begin{bmatrix}
+1&amp; 0 &amp; -v sin(\phi)dt &amp;  cos(\phi)dt\\
+0 &amp; 1 &amp; v cos(\phi)dt &amp; sin(\phi) dt\\
+0 &amp; 0 &amp; 1 &amp; 0\\
+0 &amp; 0 &amp; 0 &amp; 1\\
+\end{bmatrix}
+\end{equation*}\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">jacob_f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">DT</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Jacobian of Motion Model motion model</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">yaw</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+  <span class="n">v</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+  <span class="n">jF</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+      <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="n">DT</span><span class="o">*</span><span class="n">v</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw</span><span class="p">),</span> <span class="n">DT</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw</span><span class="p">)],</span>
+      <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">DT</span><span class="o">*</span><span class="n">v</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw</span><span class="p">),</span> <span class="n">DT</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw</span><span class="p">)],</span>
+      <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
+
+  <span class="k">return</span> <span class="n">jF</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="observation-model">
+<h3>Observation Model<a class="headerlink" href="#observation-model" title="Permalink to this headline">¶</a></h3>
+<p>The robot can get x-y position infomation from GPS.</p>
+<p>Given that<br />
+<span class="math notranslate nohighlight">\(\textbf{x}_t = [x_t, y_t, \phi_t, v_t]\)</span><br />
+<span class="math notranslate nohighlight">\(\textbf{z}_t=[x_t,y_t]\)</span></p>
+<p>So GPS Observation model is</p>
+<div class="math notranslate nohighlight">
+\[\textbf{z}_{t} = H\textbf{x}_t\]</div>
+<p>where</p>
+<p><span class="math notranslate nohighlight">\(\begin{equation*}
+H=
+\begin{bmatrix}
+1 &amp; 0 &amp; 0&amp; 0\\
+0 &amp; 1 &amp; 0&amp; 0\\
+\end{bmatrix}
+\end{equation*}\)</span></p>
+<p>Its Jacobian matrix is</p>
+<p><span class="math notranslate nohighlight">\(\begin{equation*}
+J_H=
+\begin{bmatrix}
+\frac{dx}{dx}&amp; \frac{dx}{dy} &amp; \frac{dx}{d\phi} &amp;  \frac{dx}{dv}\\
+\frac{dy}{dx}&amp; \frac{dy}{dy} &amp; \frac{dy}{d\phi} &amp;  \frac{dy}{dv}\\
+\end{bmatrix}
+\end{equation*}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\begin{equation*}
+　=
+\begin{bmatrix}
+1&amp; 0 &amp; 0 &amp; 0\\
+0 &amp; 1 &amp; 0 &amp; 0\\
+\end{bmatrix}
+\end{equation*}\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">observation_model</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+  <span class="n">z</span> <span class="o">=</span> <span class="n">H</span> <span class="o">@</span> <span class="n">x</span>
+  <span class="k">return</span> <span class="n">z</span>
+
+<span class="k">def</span> <span class="nf">jacob_h</span><span class="p">():</span>
+  <span class="c1"># Jacobian of Observation Model</span>
+  <span class="n">jH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+           <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+  <span class="k">return</span> <span class="n">jH</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="extented-kalman-filter">
+<h3>Extented Kalman Filter<a class="headerlink" href="#extented-kalman-filter" title="Permalink to this headline">¶</a></h3>
+<p>Localization process using Extendted Kalman Filter:EKF is</p>
+<p>=== Predict ===</p>
+<p><span class="math notranslate nohighlight">\(x_{Pred} = Fx_t+Bu_t\)</span></p>
+<p><span class="math notranslate nohighlight">\(P_{Pred} = J_FP_t J_F^T + Q\)</span></p>
+<p>=== Update ===</p>
+<p><span class="math notranslate nohighlight">\(z_{Pred} = Hx_{Pred}\)</span></p>
+<p><span class="math notranslate nohighlight">\(y = z - z_{Pred}\)</span></p>
+<p><span class="math notranslate nohighlight">\(S = J_H P_{Pred}.J_H^T + R\)</span></p>
+<p><span class="math notranslate nohighlight">\(K = P_{Pred}.J_H^T S^{-1}\)</span></p>
+<p><span class="math notranslate nohighlight">\(x_{t+1} = x_{Pred} + Ky\)</span></p>
+<p><span class="math notranslate nohighlight">\(P_{t+1} = ( I - K J_H) P_{Pred}\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ekf_estimation</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+  <span class="c1"># Predict</span>
+  <span class="n">xPred</span> <span class="o">=</span> <span class="n">motion_model</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+  <span class="n">jF</span> <span class="o">=</span> <span class="n">jacob_f</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+  <span class="n">PPred</span> <span class="o">=</span> <span class="n">jF</span> <span class="o">@</span> <span class="n">PEst</span> <span class="o">@</span> <span class="n">jF</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">Q</span>
+
+  <span class="c1"># Update</span>
+  <span class="n">jH</span> <span class="o">=</span> <span class="n">jacob_h</span><span class="p">()</span>
+  <span class="n">zPred</span> <span class="o">=</span> <span class="n">observation_model</span><span class="p">(</span><span class="n">xPred</span><span class="p">)</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="n">zPred</span>
+  <span class="n">S</span> <span class="o">=</span> <span class="n">jH</span> <span class="o">@</span> <span class="n">PPred</span> <span class="o">@</span> <span class="n">jH</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">R</span>
+  <span class="n">K</span> <span class="o">=</span> <span class="n">PPred</span> <span class="o">@</span> <span class="n">jH</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+  <span class="n">xEst</span> <span class="o">=</span> <span class="n">xPred</span> <span class="o">+</span> <span class="n">K</span> <span class="o">@</span> <span class="n">y</span>
+  <span class="n">PEst</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xEst</span><span class="p">))</span> <span class="o">-</span> <span class="n">K</span> <span class="o">@</span> <span class="n">jH</span><span class="p">)</span> <span class="o">@</span> <span class="n">PPred</span>
+  <span class="k">return</span> <span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span>
+
+<span class="n">xEst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># State Vector [x y yaw v]</span>
+<span class="n">PEst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># Covariace matrix of the state</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">observation_model</span><span class="p">(</span><span class="n">xEst</span><span class="p">)</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># time tick [s]</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">calc_input</span><span class="p">()</span>
+<span class="n">ekf_estimation</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([[0.04950495],
+        [0.        ],
+        [0.01      ],
+        [0.9950495 ]]),
+ array([[0.5049505 , 0.        , 0.        , 0.04950495],
+        [0.        , 0.5049505 , 0.04950495, 0.        ],
+        [0.        , 0.04950495, 0.99535412, 0.        ],
+        [0.04950495, 0.        , 0.        , 1.9950495 ]]))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulation parameter</span>
+<span class="n">INPUT_NOISE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)])</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="n">GPS_NOISE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="k">def</span> <span class="nf">observation</span><span class="p">(</span><span class="n">xTrue</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+  <span class="n">xTrue</span> <span class="o">=</span> <span class="n">motion_model</span><span class="p">(</span><span class="n">xTrue</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+  
+  <span class="c1"># add noise to gps x-y</span>
+  <span class="n">z</span> <span class="o">=</span> <span class="n">observation_model</span><span class="p">(</span><span class="n">xTrue</span><span class="p">)</span> <span class="o">+</span> <span class="n">GPS_NOISE</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+ 
+  <span class="c1"># add noise to input</span>
+  <span class="n">ud</span> <span class="o">=</span> <span class="n">u</span> <span class="o">+</span> <span class="n">INPUT_NOISE</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">xTrue</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">ud</span>
+
+
+<span class="n">xs_init</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">calc_input</span><span class="p">()</span>
+<span class="n">xTrue</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">ud</span> <span class="o">=</span> <span class="n">observation</span><span class="p">(</span><span class="n">xs_init</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">xRaw</span> <span class="o">=</span> <span class="n">motion_model</span><span class="p">(</span><span class="n">xs_init</span><span class="p">,</span> <span class="n">ud</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">xTrue</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">xRaw</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ud</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[1. ]
+ [0. ]
+ [0.1]
+ [1. ]]
+[[2.31589188]
+ [0.        ]
+ [0.18290528]
+ [2.31589188]]
+[[1.46433487]
+ [0.22398672]]
+[[2.31589188]
+ [0.18290528]]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_covariance_ellipse</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span><span class="p">):</span>
+  <span class="n">Pxy</span> <span class="o">=</span> <span class="n">PEst</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+  <span class="n">eigval</span><span class="p">,</span> <span class="n">eigvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">Pxy</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">eigval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">eigval</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="n">bigind</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">smallind</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">bigind</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">smallind</span> <span class="o">=</span> <span class="mi">0</span>
+
+  <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+  <span class="n">a</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">eigval</span><span class="p">[</span><span class="n">bigind</span><span class="p">])</span>
+  <span class="n">b</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">eigval</span><span class="p">[</span><span class="n">smallind</span><span class="p">])</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">t</span><span class="p">]</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">t</span><span class="p">]</span>
+  <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">eigvec</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">bigind</span><span class="p">],</span> <span class="n">eigvec</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">bigind</span><span class="p">])</span>
+  <span class="n">rot</span> <span class="o">=</span> <span class="n">Rot</span><span class="o">.</span><span class="n">from_euler</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+  <span class="n">fx</span> <span class="o">=</span> <span class="n">rot</span> <span class="o">@</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]))</span>
+  <span class="n">px</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fx</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span> <span class="o">+</span> <span class="n">xEst</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+  <span class="n">py</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fx</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">+</span> <span class="n">xEst</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="s2">&quot;--r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is a sensor fusion localization with Extended Kalman Filter(EKF).</p>
+<p>The blue line is true trajectory, the black line is dead reckoning
+trajectory,</p>
+<p>the green point is positioning observation (ex. GPS), and the red line
+is estimated trajectory with EKF.</p>
+<p>The red ellipse is estimated covariance ellipse with EKF.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython</span> <span class="kn">import</span> <span class="n">display</span>
+
+<span class="n">time</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<span class="c1"># State Vector [x y yaw v]&#39;</span>
+<span class="n">xEst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">xTrue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">PEst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">xDR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># Dead reckoning</span>
+
+<span class="c1"># history</span>
+<span class="n">hxEst</span> <span class="o">=</span> <span class="n">xEst</span>
+<span class="n">hxTrue</span> <span class="o">=</span> <span class="n">xTrue</span>
+<span class="n">hxDR</span> <span class="o">=</span> <span class="n">xTrue</span>
+<span class="n">hz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">while</span> <span class="n">SIM_TIME</span> <span class="o">&gt;=</span> <span class="n">time</span><span class="p">:</span>
+  <span class="n">time</span> <span class="o">+=</span> <span class="n">DT</span>
+  <span class="n">u</span> <span class="o">=</span> <span class="n">calc_input</span><span class="p">()</span>
+
+  <span class="n">xTrue</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">ud</span> <span class="o">=</span> <span class="n">observation</span><span class="p">(</span><span class="n">xTrue</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">DT</span><span class="p">)</span>
+  <span class="n">xDR</span> <span class="o">=</span> <span class="n">motion_model</span><span class="p">(</span><span class="n">xDR</span><span class="p">,</span> <span class="n">ud</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">DT</span><span class="p">)</span> <span class="c1"># Only compute with ud</span>
+  <span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span> <span class="o">=</span> <span class="n">ekf_estimation</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">ud</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">DT</span><span class="p">)</span>
+
+  <span class="c1"># store data history</span>
+  <span class="n">hxEst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">hxEst</span><span class="p">,</span> <span class="n">xEst</span><span class="p">))</span>
+  <span class="n">hxDR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">hxDR</span><span class="p">,</span> <span class="n">xDR</span><span class="p">))</span>
+  <span class="n">hxTrue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">hxTrue</span><span class="p">,</span> <span class="n">xTrue</span><span class="p">))</span>
+  <span class="n">hz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">hz</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+
+  <span class="k">if</span> <span class="n">show_animation</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
+    <span class="c1"># # for stopping simulation with the esc key.</span>
+    <span class="c1"># plt.gcf().canvas.mpl_connect(&#39;key_release_event&#39;,</span>
+    <span class="c1">#     lambda event: [exit(0) if event.key == &#39;escape&#39; else None])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hz</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span> <span class="n">hz</span><span class="p">[</span><span class="mi">1</span><span class="p">,:],</span> <span class="s2">&quot;.g&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hxTrue</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+         <span class="n">hxTrue</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="s2">&quot;-b&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hxDR</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+         <span class="n">hxDR</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="s2">&quot;-k&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hxEst</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+         <span class="n">hxEst</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="s2">&quot;-r&quot;</span><span class="p">)</span>
+    <span class="n">plot_covariance_ellipse</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span><span class="p">)</span>
+
+    <span class="n">display</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="n">display</span><span class="o">.</span><span class="n">clear_output</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/extended_kalman_filter_localization_17_0.png" src="../_images/extended_kalman_filter_localization_17_0.png" />
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./Kalmanfilter"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+    <a class='left-prev' id="prev-link" href="Kalmanfilter_basics.html" title="previous page">KF Basics - Part I</a>
+    <a class='right-next' id="next-link" href="unscented_kalman_filter.html" title="next page">Unscented Kalman Filter</a>
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Austin.Dawei<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

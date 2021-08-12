@@ -1,0 +1,1239 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unscented Kalman Filter &#8212; Austin&#39;s Notebook</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.e8e5499552300ddf5d7adccae7cc3b70.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ICP" href="../Open3D/ICP.html" />
+    <link rel="prev" title="Extended Kalman Filter Localization" href="extended_kalman_filter_localization.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Austin's Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../README.html">
+   Hello Jupyter
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Deep Learning
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../DETR/My_DETR.html">
+   My_DETR
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  3D world
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../IMU/imu.html">
+   IMU与车辆
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../IMU/Lidar_with_rotation.html">
+   Lidar with Rotation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../IMU/SO3_SE3_spatialmath.html">
+   SO3_SE3_spatialmath
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Kalmanfilter
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="Kalmanfilter_basics.html">
+   KF Basics - Part I
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="extended_kalman_filter_localization.html">
+   Extended Kalman Filter Localization
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Unscented Kalman Filter
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  3D Tools
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Open3D/ICP.html">
+   ICP
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Open3D/Open3D_visualization.html">
+   Open3D Visualize in Google Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../3D_tools/pytransform3d.html">
+   pytransform3d
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../matplotlib/mplot3d.html">
+   Matplotlib
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/Kalmanfilter/unscented_kalman_filter.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/executablebooks/jupyter-book"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FKalmanfilter/unscented_kalman_filter.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/Kalmanfilter/unscented_kalman_filter.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Unscented Kalman Filter
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#python-robotics">
+   Python Robotics
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#states-and-control-inputs">
+     States and Control inputs
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#motion-model">
+     Motion Model
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#observation-model">
+     Observation Model
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sigma-points">
+     Sigma points
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#predication">
+     Predication
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#update">
+     Update
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sum-up">
+     Sum-up
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cholesky-vs-sqrtm">
+     cholesky VS sqrtm
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id1">
+       正定矩阵 &amp; 半正定矩阵
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#cholesky">
+       cholesky分解
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#filterpy">
+   filterpy
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="unscented-kalman-filter">
+<h1>Unscented Kalman Filter<a class="headerlink" href="#unscented-kalman-filter" title="Permalink to this headline">¶</a></h1>
+<p><a href="https://colab.research.google.com/github/LinkHS/Colab/blob/main/Kalmanfilter/unscented_kalman_filter.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.transform</span> <span class="kn">import</span> <span class="n">Rotation</span> <span class="k">as</span> <span class="n">Rot</span>
+<span class="kn">import</span> <span class="nn">scipy.linalg</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="python-robotics">
+<h1>Python Robotics<a class="headerlink" href="#python-robotics" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="states-and-control-inputs">
+<h2>States and Control inputs<a class="headerlink" href="#states-and-control-inputs" title="Permalink to this headline">¶</a></h2>
+<p>状态量：x坐标、y坐标、偏航角、速度</p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span> are a 2D x-y position, <span class="math notranslate nohighlight">\(\phi\)</span> is orientation, and <span class="math notranslate nohighlight">\(v\)</span> is velocity.</p>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(\textbf{x}_t=[x_t, y_t, \phi_t, v_t]\)</span></p>
+<p>控制量：速度、角速度</p>
+<blockquote>
+<div><p>The robot has a speed sensor and a gyro sensor.</p>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(\textbf{u}_t=[v_t, \omega_t]\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_input</span><span class="p">():</span>
+  <span class="n">v</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># [m/s]</span>
+  <span class="n">yawRate</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># [rad/s]</span>
+  <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">v</span><span class="p">,</span> <span class="n">yawRate</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span>
+  <span class="k">return</span> <span class="n">u</span>
+
+<span class="n">u</span> <span class="o">=</span> <span class="n">calc_input</span><span class="p">()</span>
+<span class="n">u</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[1. ],
+       [0.1]])
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="motion-model">
+<h2>Motion Model<a class="headerlink" href="#motion-model" title="Permalink to this headline">¶</a></h2>
+<p>The robot model is</p>
+<p><span class="math notranslate nohighlight">\( \dot{x} = vcos(\phi)\)</span><br />
+<span class="math notranslate nohighlight">\( \dot{y} = vsin((\phi)\)</span><br />
+<span class="math notranslate nohighlight">\( \dot{\phi} = \omega\)</span></p>
+<p>Given that <span class="math notranslate nohighlight">\(\textbf{x}_t = [x_t, y_t, \phi_t, v_t]\)</span>，<span class="math notranslate nohighlight">\(\textbf{u}_t = [v_t, \dot{\phi}]\)</span></p>
+<p>the motion model is</p>
+<p><span class="math notranslate nohighlight">\(\textbf{x}_{t+1} = f(x_t, u_t)\)</span><br />
+<span class="math notranslate nohighlight">\(\qquad = F\textbf{x}_t+B\textbf{u}_t\)</span></p>
+<p><span class="math notranslate nohighlight">\(x_{t+1} = x_t + \dot{x}\Delta t\)</span><br />
+<span class="math notranslate nohighlight">\(y_{t+1} = y_t + \dot{y}\Delta t\)</span><br />
+<span class="math notranslate nohighlight">\(\phi_{t+1} = \phi_t + \dot{\phi}\Delta t\)</span><br />
+<span class="math notranslate nohighlight">\(v_{t+1} = 0 + v_{t+1}\)</span></p>
+<p>where</p>
+<p><span class="math notranslate nohighlight">\(\begin{equation*}
+F=
+\begin{bmatrix}
+1 &amp; 0 &amp; 0 &amp; 0\\
+0 &amp; 1 &amp; 0 &amp; 0\\
+0 &amp; 0 &amp; 1 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 0 \\
+\end{bmatrix}
+\end{equation*}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\begin{equation*}
+B=
+\begin{bmatrix}
+cos(\phi)\Delta t &amp; 0\\
+sin(\phi)\Delta t &amp; 0\\
+0 &amp; \Delta t\\
+1 &amp; 0\\
+\end{bmatrix}
+\end{equation*}\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">motion_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+  <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+
+  <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">dt</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="n">dt</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">dt</span><span class="p">],</span>
+          <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="nd">@x</span> <span class="o">+</span> <span class="n">B</span><span class="nd">@u</span>
+  <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="observation-model">
+<h2>Observation Model<a class="headerlink" href="#observation-model" title="Permalink to this headline">¶</a></h2>
+<p>观测量：x坐标、y坐标</p>
+<blockquote>
+<div><p>The robot has a GNSS sensor.</p>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(\textbf{z}_t = [x_t, y_t]\)</span></p>
+<p>Given that <span class="math notranslate nohighlight">\(\textbf{x}_t = [x_t, y_t, \phi_t, v_t]\)</span>, so the observation model is</p>
+<p><span class="math notranslate nohighlight">\(\textbf{z}_{t} = H\textbf{x}_t\)</span></p>
+<p>where</p>
+<p><span class="math notranslate nohighlight">\(\begin{equation*}
+H=
+\begin{bmatrix}
+1 &amp; 0 &amp; 0&amp; 0\\
+0 &amp; 1 &amp; 0&amp; 0\\
+\end{bmatrix}
+\end{equation*}\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">observation_model</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+  <span class="n">z</span> <span class="o">=</span> <span class="n">H</span> <span class="o">@</span> <span class="n">x</span>
+  <span class="k">return</span> <span class="n">z</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">observation_model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[1.],
+       [1.]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>给观测量和控制量加上噪音：</p>
+<p><span class="math notranslate nohighlight">\(\textbf{u}_d = \textbf{u} + \epsilon\)</span></p>
+<p><span class="math notranslate nohighlight">\(\textbf{z} = H\textbf{x} + \delta\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulation parameter</span>
+<span class="n">INPUT_NOISE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)])</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="n">GPS_NOISE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="k">def</span> <span class="nf">observation</span><span class="p">(</span><span class="n">xTrue</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+  <span class="n">xTrue</span> <span class="o">=</span> <span class="n">motion_model</span><span class="p">(</span><span class="n">xTrue</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+  <span class="c1"># add noise to gps x-y</span>
+  <span class="n">z</span> <span class="o">=</span> <span class="n">observation_model</span><span class="p">(</span><span class="n">xTrue</span><span class="p">)</span> <span class="o">+</span> <span class="n">GPS_NOISE</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="c1"># add noise to input</span>
+  <span class="n">ud</span> <span class="o">=</span> <span class="n">u</span> <span class="o">+</span> <span class="n">INPUT_NOISE</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">xTrue</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">ud</span>
+
+<span class="n">xTrue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">calc_input</span><span class="p">()</span>
+<span class="n">xTrue</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">ud</span> <span class="o">=</span> <span class="n">observation</span><span class="p">(</span><span class="n">xTrue</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;xTrue:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">xTrue</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">z:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">u:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">u with noise:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ud</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>xTrue:
+ [[1. ]
+ [0. ]
+ [0.1]
+ [1. ]]
+
+z:
+ [[ 1.22539845]
+ [-0.11166166]]
+
+u:
+ [[1. ]
+ [0.1]]
+
+u with noise:
+ [[0.3668484 ]
+ [0.23745866]]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="sigma-points">
+<h2>Sigma points<a class="headerlink" href="#sigma-points" title="Permalink to this headline">¶</a></h2>
+<p>In this case, the functions <span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(h\)</span> are not linear. UKF applies UT to performs the approximation with extracted points called ”Sigma points. Sigma points are computed using the matrix <span class="math notranslate nohighlight">\(S\)</span> which is defined from the covariance matrix, <span class="math notranslate nohighlight">\(\Sigma_t\)</span>. <span class="math notranslate nohighlight">\(S_i\)</span> denotes the i-th colum of the matrix <span class="math notranslate nohighlight">\(S\)</span></p>
+<div class="math notranslate nohighlight">
+\[S = \sqrt{\Sigma_t}\]</div>
+<p>We define the sigma points <span class="math notranslate nohighlight">\(X_{i,t} \in X_t\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+X_{i, t}=\left\{\begin{array}{ll}
+=\mu_{t}, &amp; i=0 \\
+=\mu_{t}+\gamma S_{i}, &amp; i=1, \ldots, N \\
+=\mu_{t}-\gamma S_{i-N}, &amp; i=N+1, \ldots, 2 N
+\end{array}\right.
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(N\)</span> is the dimension of the state, and <span class="math notranslate nohighlight">\(\gamma\)</span> is computed by:</p>
+<div class="math notranslate nohighlight">
+\[\gamma = \sqrt{N+\lambda}\]</div>
+<div class="math notranslate nohighlight">
+\[\lambda = \alpha^{2}(N+\kappa) - N\]</div>
+<p><span class="math notranslate nohighlight">\(\alpha, \kappa\)</span> are two hyper-parameters (scaling parameters) of UKF.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_sigma_points</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span><span class="p">,</span> <span class="n">gamma</span><span class="p">):</span>
+  <span class="n">sigma</span> <span class="o">=</span> <span class="n">xEst</span>
+  <span class="n">Psqrt</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">sqrtm</span><span class="p">(</span><span class="n">PEst</span><span class="p">)</span> <span class="c1"># PEst = Psqrt @ Psqrt</span>
+  <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xEst</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+  <span class="c1"># Positive direction</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">sigma</span><span class="p">,</span> <span class="n">xEst</span> <span class="o">+</span> <span class="n">gamma</span><span class="o">*</span><span class="n">Psqrt</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span>
+
+  <span class="c1"># Negative direction</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">sigma</span><span class="p">,</span> <span class="n">xEst</span> <span class="o">-</span> <span class="n">gamma</span><span class="o">*</span><span class="n">Psqrt</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span>
+  <span class="k">return</span> <span class="n">sigma</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">ALPHA</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">KAPPA</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">lambda_</span> <span class="o">=</span> <span class="n">ALPHA</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="n">KAPPA</span><span class="p">)</span> <span class="o">-</span> <span class="n">N</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="n">lambda_</span><span class="p">)</span>
+
+<span class="n">xEst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">xTrue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">PEst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">sigma_points</span> <span class="o">=</span> <span class="n">generate_sigma_points</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span><span class="p">,</span> <span class="n">gamma</span><span class="p">)</span>
+<span class="n">sigma_points</span><span class="o">.</span><span class="n">shape</span> <span class="c1"># (N, 2N+1)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(4, 9)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="predication">
+<h2>Predication<a class="headerlink" href="#predication" title="Permalink to this headline">¶</a></h2>
+<p>And then, the sigma points are passed through the nonlinear function <span class="math notranslate nohighlight">\(f\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\bar{X} = f(X)\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict_sigma_motion</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sigma Points prediction with motion model</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sigma</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="n">sigma</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">motion_model</span><span class="p">(</span><span class="n">sigma</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">sigma</span>
+
+<span class="n">u</span> <span class="o">=</span> <span class="n">calc_input</span><span class="p">()</span>
+<span class="n">perdicted_points</span> <span class="o">=</span> <span class="n">predict_sigma_motion</span><span class="p">(</span><span class="n">sigma_points</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">perdicted_points</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(4, 9)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here <span class="math notranslate nohighlight">\(\bar{X}\)</span> are transformed sigma points. Finally, the objective parameters <span class="math notranslate nohighlight">\(\mu'\)</span> and <span class="math notranslate nohighlight">\(\Sigma'\)</span> of resultant Gaussian are calculated using the unscented transform on the tranformed sigma points, <span class="math notranslate nohighlight">\(\mu', \Sigma^\ =\ UT(\bar{X}, \omega_m, \omega_c, Q)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\mu^{\prime} = \sum_{i=0}^{2n} \omega_i^m \bar{X}_i\]</div>
+<div class="math notranslate nohighlight">
+\[\Sigma^{\prime} = \sum_{i=0}^{2n} \omega_i^c \left(\bar{X}_i-\mu^{\prime}\right)\left(\bar{X}_i-\mu^{\prime}\right)^{T} + Q\]</div>
+<p>where <span class="math notranslate nohighlight">\(Q\)</span> is Transition model convariance;</p>
+<p>and <span class="math notranslate nohighlight">\(\omega^m\)</span> are weights used when the mean is computed:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+w_i^m=\left\{\begin{array}{ll} 
+&amp; =\frac{\lambda}{N+\lambda} &amp; i=0 \\
+&amp; =\frac{1}{2(N+\lambda)}, &amp; i=1, \ldots, 2 N \end{array}\right.
+\end{split}\]</div>
+<p>and <span class="math notranslate nohighlight">\(\omega^c\)</span> are weights used when the covariance of Gaussian is recovered:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+w^c_i=\left\{\begin{aligned}
+&amp;=\frac{\lambda}{N+\lambda}+\left(1-\alpha^{2}+\beta\right) &amp; i=0 \\
+&amp;=\frac{1}{2(N+\lambda)}, &amp; i=1, \ldots, 2 N
+\end{aligned}\right.
+\end{split}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># UKF Parameter</span>
+<span class="n">ALPHA</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">BETA</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">KAPPA</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># calculate weights</span>
+<span class="n">wm</span> <span class="o">=</span> <span class="p">[</span><span class="n">lambda_</span> <span class="o">/</span> <span class="p">(</span><span class="n">lambda_</span> <span class="o">+</span> <span class="n">N</span><span class="p">)]</span>
+<span class="n">wc</span> <span class="o">=</span> <span class="p">[(</span><span class="n">lambda_</span> <span class="o">/</span> <span class="p">(</span><span class="n">lambda_</span> <span class="o">+</span> <span class="n">N</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ALPHA</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">BETA</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">N</span><span class="p">):</span>
+  <span class="n">wm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="n">lambda_</span><span class="p">)))</span>
+  <span class="n">wc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="n">lambda_</span><span class="p">)))</span>
+
+<span class="n">wm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">wm</span><span class="p">])</span>
+<span class="n">wc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">wc</span><span class="p">])</span>
+<span class="n">wm</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">wc</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>((1, 9), (1, 9))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Recall that:</p>
+<p><span class="math notranslate nohighlight">\(\mu^{\prime} = \sum_{i=0}^{2n} \omega_{m}^{[i]} \bar{X}^{[i]}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\Sigma^{\prime} = \sum_{i=0}^{2n} \omega_{c}^{[i]}\left(\bar{X}^{[i]}-\mu^{\prime}\right)\left(\bar{X}^{[i]}-\mu^{\prime}\right)^{T}\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Covariance for UKF simulation</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span>
+    <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># variance of location on x-axis</span>
+    <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># variance of location on y-axis</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span>  <span class="c1"># variance of yaw angle</span>
+    <span class="mf">1.0</span>  <span class="c1"># variance of velocity</span>
+<span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># predict state covariance</span>
+
+<span class="k">def</span> <span class="nf">calc_sigma_covariance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">wc</span><span class="p">,</span> <span class="n">Pi</span><span class="p">):</span>
+  <span class="n">nSigma</span> <span class="o">=</span> <span class="n">sigma</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+  <span class="n">d</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">sigma</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+  <span class="n">P</span> <span class="o">=</span> <span class="n">Pi</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nSigma</span><span class="p">):</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">P</span> <span class="o">+</span> <span class="n">wc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">d</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">@</span> <span class="n">d</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+  <span class="k">return</span> <span class="n">P</span>
+
+<span class="n">xPred</span> <span class="o">=</span> <span class="p">(</span><span class="n">wm</span> <span class="o">@</span> <span class="n">perdicted_points</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">PPred</span> <span class="o">=</span> <span class="n">calc_sigma_covariance</span><span class="p">(</span><span class="n">xPred</span><span class="p">,</span> <span class="n">perdicted_points</span><span class="p">,</span> <span class="n">wc</span><span class="p">,</span> <span class="n">Q</span><span class="p">)</span>
+<span class="n">xPred</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">PPred</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>((4, 1), (4, 4))
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="update">
+<h2>Update<a class="headerlink" href="#update" title="Permalink to this headline">¶</a></h2>
+<p>Kalman filters perform the update in measurement space. Thus we must convert the sigma points of the prior into measurements using the measurement function  <span class="math notranslate nohighlight">\(h\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+Z = h(\bar{X})
+\]</div>
+<p>Then we compute the mean and covariance of these points using the unscented transform, <span class="math notranslate nohighlight">\(\mu_z, P_z = UT(Z, w_m, w_c, R)\)</span>.</p>
+<blockquote>
+<div><p>The <span class="math notranslate nohighlight">\(z\)</span> subscript denotes that these are the mean and covariance of the measurement sigma points.)</p>
+</div></blockquote>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\mu_z &amp;= \sum_{i=0}^{2n} w^m_i Z_i \\
+P_z &amp;= \sum_{i=0}^{2n} w^c_i{(Z_i-\mu_z)(Z_i-\mu_z)^\mathsf T} + R
+\end{aligned}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(R\)</span> is Measurement model covariance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Update</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># Observation x,y position covariance</span>
+
+<span class="n">zSigmaPoints</span> <span class="o">=</span> <span class="n">observation_model</span><span class="p">(</span><span class="n">perdicted_points</span><span class="p">)</span>
+<span class="n">mu_z</span> <span class="o">=</span> <span class="p">(</span><span class="n">wm</span> <span class="o">@</span> <span class="n">zSigmaPoints</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">P_z</span> <span class="o">=</span> <span class="n">calc_sigma_covariance</span><span class="p">(</span><span class="n">mu_z</span><span class="p">,</span> <span class="n">zSigmaPoints</span><span class="p">,</span> <span class="n">wc</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
+
+<span class="n">mu_z</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">P_z</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>((2, 1), (2, 2))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next we compute the residual and Kalman gain. The residual of the measurement <span class="math notranslate nohighlight">\(z\)</span> is trivial to compute:</p>
+<div class="math notranslate nohighlight">
+\[y = \mathbf z_m - \mu_z\]</div>
+<p>To compute the Kalman gain we first compute the <a class="reference external" href="https://en.wikipedia.org/wiki/Cross-covariance">cross covariance</a> of the state and the measurements, which is defined as:</p>
+<div class="math notranslate nohighlight">
+\[P_{xz} = \sum_{i=0}^{2n} w^c_i(\bar{X}_i - \mu')(Z_i - \mu_z)^\mathsf T\]</div>
+<p>And then the Kalman gain is defined as</p>
+<div class="math notranslate nohighlight">
+\[K = P_{xz}P^{-1}_z\]</div>
+<p>If you think of the inverse as a <em>kind of</em> matrix reciprocal, you can see that the Kalman gain is a simple ratio which computes:</p>
+<div class="math notranslate nohighlight">
+\[K \approx \frac{P_{xz}}{P_z} 
+\approx \frac{\text{belief in state}}{\text{belief in measurement}}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_pxz</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">z_sigma</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">wc</span><span class="p">):</span>
+  <span class="n">nSigma</span> <span class="o">=</span> <span class="n">sigma</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+  <span class="n">dx</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">-</span> <span class="n">x</span>
+  <span class="n">dz</span> <span class="o">=</span> <span class="n">z_sigma</span> <span class="o">-</span> <span class="n">zb</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+  <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dz</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nSigma</span><span class="p">):</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">P</span> <span class="o">+</span> <span class="n">wc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">dx</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">@</span> <span class="n">dz</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+  <span class="k">return</span> <span class="n">P</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="n">mu_z</span>
+<span class="n">Pxz</span> <span class="o">=</span> <span class="n">calc_pxz</span><span class="p">(</span><span class="n">perdicted_points</span><span class="p">,</span> <span class="n">xPred</span><span class="p">,</span> <span class="n">zSigmaPoints</span><span class="p">,</span> <span class="n">mu_z</span><span class="p">,</span> <span class="n">wc</span><span class="p">)</span>
+<span class="n">K</span> <span class="o">=</span> <span class="n">Pxz</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">P_z</span><span class="p">)</span>
+<span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">Pxz</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">K</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>((2, 1), (4, 2), (4, 2))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we compute the new state estimate using the residual and Kalman gain:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf x = \mu' + Ky\]</div>
+<p>and the new covariance is computed as:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf P = \Sigma' - KP_zK^{\mathsf T}
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">xEst</span> <span class="o">=</span> <span class="n">xPred</span> <span class="o">+</span> <span class="n">K</span> <span class="o">@</span> <span class="n">y</span>
+<span class="n">PEst</span> <span class="o">=</span> <span class="n">PPred</span> <span class="o">-</span> <span class="n">K</span> <span class="o">@</span> <span class="n">P_z</span> <span class="o">@</span> <span class="n">K</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">xEst</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">PEst</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>((4, 1), (4, 4))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">xTrue</span><span class="p">,</span> <span class="n">xEst</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([[0.],
+        [0.],
+        [0.],
+        [0.]]), array([[ 0.93523919],
+        [-0.07444109],
+        [ 0.06277945],
+        [ 1.        ]]))
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="sum-up">
+<h2>Sum-up<a class="headerlink" href="#sum-up" title="Permalink to this headline">¶</a></h2>
+<p>This table compares the equations of the linear KF and UKF equations.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{l|l}
+\textrm{Kalman Filter} &amp; \textrm{Unscented Kalman Filter} \\
+\hline 
+&amp; \boldsymbol{\mathcal Y} = f(\boldsymbol\chi) \\
+\mathbf{\bar x} = \mathbf{Fx} &amp; 
+\mathbf{\bar x} = \sum w^m\boldsymbol{\mathcal Y}  \\
+\mathbf{\bar P} = \mathbf{FPF}^\mathsf T+\mathbf Q  &amp; 
+\mathbf{\bar P} = \sum w^c({\boldsymbol{\mathcal Y} - \mathbf{\bar x})(\boldsymbol{\mathcal Y} - \mathbf{\bar x})^\mathsf T}+\mathbf Q \\
+\hline 
+&amp; \boldsymbol{\mathcal Z} =  h(\boldsymbol{\mathcal{Y}}) \\
+&amp; \boldsymbol\mu_z = \sum w^m\boldsymbol{\mathcal{Z}} \\
+\mathbf y = \mathbf z - \mathbf{Hx} &amp;
+\mathbf y = \mathbf z - \boldsymbol\mu_z \\
+\mathbf S = \mathbf{H\bar PH}^\mathsf{T} + \mathbf R &amp; 
+\mathbf P_z = \sum w^c{(\boldsymbol{\mathcal Z}-\boldsymbol\mu_z)(\boldsymbol{\mathcal{Z}}-\boldsymbol\mu_z)^\mathsf{T}} + \mathbf R \\ 
+\mathbf K = \mathbf{\bar PH}^\mathsf T \mathbf S^{-1} &amp;
+\mathbf K = \left[\sum w^c(\boldsymbol{\mathcal Y}-\bar{\mathbf x})(\boldsymbol{\mathcal{Z}}-\boldsymbol\mu_z)^\mathsf{T}\right] \mathbf P_z^{-1} \\
+\mathbf x = \mathbf{\bar x} + \mathbf{Ky} &amp; \mathbf x = \mathbf{\bar x} + \mathbf{Ky}\\
+\mathbf P = (\mathbf{I}-\mathbf{KH})\mathbf{\bar P} &amp; \mathbf P = \bar{\mathbf P} - \mathbf{KP_z}\mathbf{K}^\mathsf{T}
+\end{array}\end{split}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ukf_estimation</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">wm</span><span class="p">,</span> <span class="n">wc</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+  <span class="c1"># Predict</span>
+  <span class="n">sigma</span> <span class="o">=</span> <span class="n">generate_sigma_points</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span><span class="p">,</span> <span class="n">gamma</span><span class="p">)</span>
+  <span class="n">perdicted_points</span> <span class="o">=</span> <span class="n">predict_sigma_motion</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+  <span class="n">xPred</span> <span class="o">=</span> <span class="p">(</span><span class="n">wm</span> <span class="o">@</span> <span class="n">sigma</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+  <span class="n">PPred</span> <span class="o">=</span> <span class="n">calc_sigma_covariance</span><span class="p">(</span><span class="n">xPred</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">wc</span><span class="p">,</span> <span class="n">Q</span><span class="p">)</span>
+
+  <span class="c1"># Update</span>
+  <span class="n">zSigmaPoints</span> <span class="o">=</span> <span class="n">observation_model</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+  <span class="n">mu_z</span> <span class="o">=</span> <span class="p">(</span><span class="n">wm</span> <span class="o">@</span> <span class="n">zSigmaPoints</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+  <span class="n">P_z</span> <span class="o">=</span> <span class="n">calc_sigma_covariance</span><span class="p">(</span><span class="n">mu_z</span><span class="p">,</span> <span class="n">zSigmaPoints</span><span class="p">,</span> <span class="n">wc</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
+  <span class="n">Pxz</span> <span class="o">=</span> <span class="n">calc_pxz</span><span class="p">(</span><span class="n">perdicted_points</span><span class="p">,</span> <span class="n">xPred</span><span class="p">,</span> <span class="n">zSigmaPoints</span><span class="p">,</span> <span class="n">mu_z</span><span class="p">,</span> <span class="n">wc</span><span class="p">)</span>
+  <span class="n">K</span> <span class="o">=</span> <span class="n">Pxz</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">P_z</span><span class="p">)</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="n">mu_z</span>
+  <span class="n">xEst</span> <span class="o">=</span> <span class="n">xPred</span> <span class="o">+</span> <span class="n">K</span> <span class="o">@</span> <span class="n">y</span>
+  <span class="n">PEst</span> <span class="o">=</span> <span class="n">PPred</span> <span class="o">-</span> <span class="n">K</span> <span class="o">@</span> <span class="n">P_z</span> <span class="o">@</span> <span class="n">K</span><span class="o">.</span><span class="n">T</span>
+
+  <span class="k">return</span> <span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span>
+
+<span class="k">def</span> <span class="nf">setup_ukf</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ALPHA</span><span class="p">,</span> <span class="n">BETA</span><span class="p">,</span> <span class="n">KAPPA</span><span class="p">):</span>
+  <span class="n">lamb</span> <span class="o">=</span> <span class="n">ALPHA</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">nx</span> <span class="o">+</span> <span class="n">KAPPA</span><span class="p">)</span> <span class="o">-</span> <span class="n">nx</span>
+  <span class="c1"># calculate weights</span>
+  <span class="n">wm</span> <span class="o">=</span> <span class="p">[</span><span class="n">lamb</span> <span class="o">/</span> <span class="p">(</span><span class="n">lamb</span> <span class="o">+</span> <span class="n">nx</span><span class="p">)]</span>
+  <span class="n">wc</span> <span class="o">=</span> <span class="p">[(</span><span class="n">lamb</span> <span class="o">/</span> <span class="p">(</span><span class="n">lamb</span> <span class="o">+</span> <span class="n">nx</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ALPHA</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">BETA</span><span class="p">)]</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nx</span><span class="p">):</span>
+      <span class="n">wm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">nx</span> <span class="o">+</span> <span class="n">lamb</span><span class="p">)))</span>
+      <span class="n">wc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">nx</span> <span class="o">+</span> <span class="n">lamb</span><span class="p">)))</span>
+  <span class="n">gamma</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nx</span> <span class="o">+</span> <span class="n">lamb</span><span class="p">)</span>
+
+  <span class="n">wm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">wm</span><span class="p">])</span>
+  <span class="n">wc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">wc</span><span class="p">])</span>
+
+  <span class="k">return</span> <span class="n">wm</span><span class="p">,</span> <span class="n">wc</span><span class="p">,</span> <span class="n">gamma</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_covariance_ellipse</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+  <span class="n">Pxy</span> <span class="o">=</span> <span class="n">PEst</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+  <span class="n">eigval</span><span class="p">,</span> <span class="n">eigvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">Pxy</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">eigval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">eigval</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="n">bigind</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">smallind</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">bigind</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">smallind</span> <span class="o">=</span> <span class="mi">0</span>
+
+  <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+  <span class="n">a</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">eigval</span><span class="p">[</span><span class="n">bigind</span><span class="p">])</span>
+  <span class="n">b</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">eigval</span><span class="p">[</span><span class="n">smallind</span><span class="p">])</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">t</span><span class="p">]</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">t</span><span class="p">]</span>
+  <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">eigvec</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">bigind</span><span class="p">],</span> <span class="n">eigvec</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">bigind</span><span class="p">])</span>
+  <span class="n">rot</span> <span class="o">=</span> <span class="n">Rot</span><span class="o">.</span><span class="n">from_euler</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+  <span class="n">fx</span> <span class="o">=</span> <span class="n">rot</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+  <span class="n">px</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fx</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">xEst</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+  <span class="n">py</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fx</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">xEst</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="s2">&quot;--r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DT</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># time tick [s]</span>
+<span class="n">SIM_TIME</span> <span class="o">=</span> <span class="mf">50.0</span>  <span class="c1"># simulation time [s]</span>
+
+<span class="c1"># Covariance for UKF simulation</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span>
+    <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># variance of location on x-axis</span>
+    <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># variance of location on y-axis</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span>  <span class="c1"># variance of yaw angle</span>
+    <span class="mf">1.0</span>  <span class="c1"># variance of velocity</span>
+<span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># predict state covariance</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># Observation x,y position covariance</span>
+
+<span class="c1"># UKF Parameter</span>
+<span class="n">ALPHA</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">BETA</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">KAPPA</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+  <span class="n">nx</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># State Vector [x y yaw v]&#39;</span>
+  <span class="n">xEst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+  <span class="n">xTrue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+  <span class="n">PEst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+  <span class="n">xDR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># Dead reckoning</span>
+
+  <span class="n">wm</span><span class="p">,</span> <span class="n">wc</span><span class="p">,</span> <span class="n">gamma</span> <span class="o">=</span> <span class="n">setup_ukf</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ALPHA</span><span class="p">,</span> <span class="n">BETA</span><span class="p">,</span> <span class="n">KAPPA</span><span class="p">)</span>
+
+  <span class="c1"># history</span>
+  <span class="n">hxEst</span> <span class="o">=</span> <span class="n">xEst</span>
+  <span class="n">hxTrue</span> <span class="o">=</span> <span class="n">xTrue</span>
+  <span class="n">hxDR</span> <span class="o">=</span> <span class="n">xTrue</span>
+  <span class="n">hz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+  <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
+  <span class="n">time</span> <span class="o">=</span> <span class="mf">0.0</span>
+  <span class="k">while</span> <span class="n">SIM_TIME</span> <span class="o">&gt;=</span> <span class="n">time</span><span class="p">:</span>
+    <span class="n">time</span> <span class="o">+=</span> <span class="n">DT</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">calc_input</span><span class="p">()</span>
+
+    <span class="n">xTrue</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">ud</span> <span class="o">=</span> <span class="n">observation</span><span class="p">(</span><span class="n">xTrue</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">DT</span><span class="p">)</span>
+    <span class="n">xDR</span> <span class="o">=</span> <span class="n">motion_model</span><span class="p">(</span><span class="n">xDR</span><span class="p">,</span> <span class="n">ud</span><span class="p">,</span> <span class="n">DT</span><span class="p">)</span>
+
+    <span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span> <span class="o">=</span> <span class="n">ukf_estimation</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">ud</span><span class="p">,</span> <span class="n">wm</span><span class="p">,</span> <span class="n">wc</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">DT</span><span class="p">)</span>
+
+    <span class="c1"># store data history</span>
+    <span class="n">hxEst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">hxEst</span><span class="p">,</span> <span class="n">xEst</span><span class="p">))</span>
+    <span class="n">hxDR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">hxDR</span><span class="p">,</span> <span class="n">xDR</span><span class="p">))</span>
+    <span class="n">hxTrue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">hxTrue</span><span class="p">,</span> <span class="n">xTrue</span><span class="p">))</span>
+    <span class="n">hz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">hz</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">*</span><span class="mi">10</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">plot_covariance_ellipse</span><span class="p">(</span><span class="n">xEst</span><span class="p">,</span> <span class="n">PEst</span><span class="p">)</span>
+
+  <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hxEst</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">hxEst</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hxTrue</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">hxTrue</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hxDR</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">hxDR</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+  <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;UKF Robot localization&quot;</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/unscented_kalman_filter_30_0.png" src="../_images/unscented_kalman_filter_30_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="cholesky-vs-sqrtm">
+<h2>cholesky VS sqrtm<a class="headerlink" href="#cholesky-vs-sqrtm" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>正定矩阵 &amp; 半正定矩阵<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>对于任意长度的非零向量<span class="math notranslate nohighlight">\(X\)</span>，若：</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(X^TAX &gt; 0\)</span>，则矩阵<span class="math notranslate nohighlight">\(A\)</span>为正定矩阵</p></li>
+<li><p><span class="math notranslate nohighlight">\(X^TAX \ge 0\)</span>，则矩阵<span class="math notranslate nohighlight">\(A\)</span>为半正定矩阵</p></li>
+</ul>
+<p>记转换后的向量<span class="math notranslate nohighlight">\(M = AX\)</span>，则<span class="math notranslate nohighlight">\(X^TAX = X^TM = \cos(\theta)\cdot ||M||\cdot||X||\)</span>，那么意味着：</p>
+<ul class="simple">
+<li><p>对于正定矩阵，<span class="math notranslate nohighlight">\(\cos(\theta) &gt; 0\)</span>，即<span class="math notranslate nohighlight">\(\theta &lt; 90^{\circ}\)</span></p></li>
+<li><p>对于半正定举证，<span class="math notranslate nohighlight">\(\cos(\theta) \ge 0\)</span>，即<span class="math notranslate nohighlight">\(\theta \le 90^{\circ}\)</span></p></li>
+</ul>
+<p>矩阵变换<span class="math notranslate nohighlight">\(AX\)</span>表示向量<span class="math notranslate nohighlight">\(X\)</span>会沿着该矩阵特征向量的方向进行变换（缩放），缩放比例由特征值<span class="math notranslate nohighlight">\(\lambda\)</span>决定。从特征值角度来看：</p>
+<ul class="simple">
+<li><p>正定矩阵所有特征值都大于0</p></li>
+<li><p>半正定矩阵所有特征值大于等于0</p></li>
+</ul>
+<p>那么正定矩阵小于90度的含义是变换后的向量<span class="math notranslate nohighlight">\(M\)</span>是沿着原向量<span class="math notranslate nohighlight">\(X\)</span>的正方向进行缩放的（即<span class="math notranslate nohighlight">\(M\)</span>投影回原向量时方向不变）。</p>
+<p>参考资料：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.zhihu.com/question/319276709/answer/1195620832">矩阵的特征值是虚数，它的几何解释是什么？</a></p></li>
+<li><p><a class="reference external" href="https://www.cnblogs.com/marsggbo/p/11461155.html">如何理解正定矩阵和半正定矩阵</a></p></li>
+<li><p>为什么协方差矩阵要是半正定的？<a class="reference external" href="https://zhuanlan.zhihu.com/p/44860862">浅谈「正定矩阵」和「半正定矩阵」</a></p></li>
+</ul>
+</div>
+<div class="section" id="cholesky">
+<h3>cholesky分解<a class="headerlink" href="#cholesky" title="Permalink to this headline">¶</a></h3>
+<p>Cholesky 分解是把一个对称正定的矩阵表示成一个下三角矩阵L和其转置的乘积的分解<span class="math notranslate nohighlight">\(A = L L^T\)</span>。它要求矩阵的所有特征值必须大于零，故分解的下三角的对角元也是大于零的。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">A</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([2., 0., 1.])
+</pre></div>
+</div>
+</div>
+</div>
+<p>由于<span class="math notranslate nohighlight">\(A\)</span>的特征值有0（半正定），所以不能用Cholesky分解，这里用<code class="docutils literal notranslate"><span class="pre">sqrtm</span></code>：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">sqrtm</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">@</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">sqrtm</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[1., 0., 0.],
+       [1., 1., 1.],
+       [2., 1., 1.]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>再看下对称正定矩阵：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">B</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([7.81113862, 0.33192769, 3.85693369])
+</pre></div>
+</div>
+</div>
+</div>
+<p>其特征值都大于0，那么可以用<code class="docutils literal notranslate"><span class="pre">cholesky</span></code>分解:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">B</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 6.00000000e+00, -3.00000000e+00,  1.00000000e+00],
+       [-3.00000000e+00,  2.00000000e+00, -4.26642159e-17],
+       [ 1.00000000e+00, -4.26642159e-17,  4.00000000e+00]])
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="filterpy">
+<h1>filterpy<a class="headerlink" href="#filterpy" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python">Kalman-and-Bayesian-Filters-in-Python</a>中实现的<a class="reference external" href="https://filterpy.readthedocs.io/en/latest/kalman/UnscentedKalmanFilter.html">filterpy</a>。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>!pip install filterpy
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">motion_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+  <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+
+  <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">dt</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="n">dt</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">dt</span><span class="p">],</span>
+          <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="nd">@x</span> <span class="o">+</span> <span class="n">B</span><span class="nd">@u</span>
+  <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">def</span> <span class="nf">observation_model</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+  <span class="n">z</span> <span class="o">=</span> <span class="n">H</span> <span class="o">@</span> <span class="n">x</span>
+  <span class="k">return</span> <span class="n">z</span>
+
+<span class="k">def</span> <span class="nf">observation</span><span class="p">(</span><span class="n">xTrue</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+  <span class="c1"># Simulation parameter</span>
+  <span class="n">INPUT_NOISE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)])</span> <span class="o">**</span> <span class="mi">2</span>
+  <span class="n">GPS_NOISE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+
+  <span class="n">xTrue</span> <span class="o">=</span> <span class="n">motion_model</span><span class="p">(</span><span class="n">xTrue</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+  <span class="c1"># add noise to gps x-y</span>
+  <span class="n">z</span> <span class="o">=</span> <span class="n">observation_model</span><span class="p">(</span><span class="n">xTrue</span><span class="p">)</span> <span class="o">+</span> <span class="n">GPS_NOISE</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="c1"># add noise to input</span>
+  <span class="n">ud</span> <span class="o">=</span> <span class="n">u</span> <span class="o">+</span> <span class="n">INPUT_NOISE</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">xTrue</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">ud</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">filterpy.kalman</span> <span class="kn">import</span> <span class="n">MerweScaledSigmaPoints</span>
+<span class="kn">from</span> <span class="nn">filterpy.kalman</span> <span class="kn">import</span> <span class="n">UnscentedKalmanFilter</span> <span class="k">as</span> <span class="n">UKF</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">sigmas</span> <span class="o">=</span> <span class="n">MerweScaledSigmaPoints</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.001</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ukf</span> <span class="o">=</span> <span class="n">UKF</span><span class="p">(</span><span class="n">dim_x</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">dim_z</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fx</span><span class="o">=</span><span class="n">motion_model</span><span class="p">,</span>
+      <span class="n">hx</span><span class="o">=</span><span class="n">observation_model</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="n">sigmas</span><span class="p">)</span>
+<span class="n">ukf</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># Covariance for UKF simulation</span>
+<span class="n">ukf</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span>
+    <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># variance of location on x-axis</span>
+    <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># variance of location on y-axis</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span>  <span class="c1"># variance of yaw angle</span>
+    <span class="mf">1.0</span>  <span class="c1"># variance of velocity</span>
+<span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># predict state covariance</span>
+<span class="n">ukf</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># Observation x,y position covariance</span>
+
+
+<span class="n">xTrue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>
+<span class="n">uxs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">500</span><span class="p">):</span>
+  <span class="n">ukf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">u</span><span class="o">=</span><span class="n">u</span><span class="p">)</span>
+  <span class="n">xTrue</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">observation</span><span class="p">(</span><span class="n">xTrue</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+  <span class="n">ukf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+  <span class="n">uxs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ukf</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+  <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xTrue</span><span class="p">)</span>
+<span class="n">uxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">uxs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">uxs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">uxs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estimated&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;UKF Robot localization&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;UKF standard deviation </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">uxs</span> <span class="o">-</span> <span class="n">xs</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> meters&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/unscented_kalman_filter_43_0.png" src="../_images/unscented_kalman_filter_43_0.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UKF standard deviation 0.050 meters
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./Kalmanfilter"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+    <a class='left-prev' id="prev-link" href="extended_kalman_filter_localization.html" title="previous page">Extended Kalman Filter Localization</a>
+    <a class='right-next' id="next-link" href="../Open3D/ICP.html" title="next page">ICP</a>
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Austin.Dawei<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>
