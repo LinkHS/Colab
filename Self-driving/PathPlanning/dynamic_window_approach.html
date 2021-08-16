@@ -1,0 +1,1246 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Window Approach &#8212; Austin&#39;s Notebook</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet" />
+  <link href="../../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx-book-theme.e8e5499552300ddf5d7adccae7cc3b70.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="ICP" href="../../Open3D/ICP.html" />
+    <link rel="prev" title="Path Planning" href="README.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      <img src="../../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Austin's Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../README.html">
+   Hello Jupyter
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Deep Learning
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../DETR/My_DETR.html">
+   My_DETR
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  3D world
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../IMU/imu.html">
+   IMU与车辆
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../IMU/Lidar_with_rotation.html">
+   Lidar with Rotation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../IMU/SO3_SE3_spatialmath.html">
+   SO3_SE3_spatialmath
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Kalman filter
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../Kalmanfilter/Kalmanfilter_basics.html">
+   KF Basics - Part I
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../Kalmanfilter/extended_kalman_filter_localization.html">
+   Extended Kalman Filter Localization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../Kalmanfilter/unscented_kalman_filter.html">
+   Unscented Kalman Filter
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Self Driving
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="README.html">
+   Path Planning
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Dynamic Window Approach
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  3D Tools
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../Open3D/ICP.html">
+   ICP
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../Open3D/Open3D_visualization.html">
+   Open3D Visualize in Google Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../3D_tools/pytransform3d.html">
+   pytransform3d
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../matplotlib/mplot3d.html">
+   Matplotlib
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../_sources/Self-driving/PathPlanning/dynamic_window_approach.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/LinkHS/Colab"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/LinkHS/Colab/issues/new?title=Issue%20on%20page%20%2FSelf-driving/PathPlanning/dynamic_window_approach.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/LinkHS/Colab/master?urlpath=tree/docs/Self-driving/PathPlanning/dynamic_window_approach.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   运动方程
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   轨迹预测
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     运动轨迹模拟
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   动态窗口确定动作搜索空间
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id5">
+   轨迹目标函数
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     距离代价
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     目标方向代价
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id8">
+       模拟实验
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     速度代价
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id10">
+   遍历搜索
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id11">
+     防止陷入局部最优
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id12">
+   初始化
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id13">
+   模拟实验
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#numpybroadcast">
+   附录：Numpy中的Broadcast
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="dynamic-window-approach">
+<h1>Dynamic Window Approach<a class="headerlink" href="#dynamic-window-approach" title="Permalink to this headline">¶</a></h1>
+<p><a href="https://colab.research.google.com/github/LinkHS/Colab/blob/master/%20Self-driving/PathPlanning/dynamic_window_approach.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
+<p>References:</p>
+<ul class="simple">
+<li><p>论文：<a class="reference external" href="https://www.ri.cmu.edu/pub_files/pub1/fox_dieter_1997_1/fox_dieter_1997_1.pdf">The Dynamic Window Approach to Collision Avoidance</a></p></li>
+<li><p>代码：<a class="reference external" href="https://github.com/AtsushiSakai/PythonRobotics/blob/master/PathPlanning/DynamicWindowApproach/dynamic_window_approach.py">Python Robotics</a></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">show_animation</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>车辆本身参数，包括形状（圆形、长方形）、最大/最小速度等：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RobotType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+  <span class="n">circle</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">rectangle</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  simulation parameter class</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># robot parameter</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">max_speed</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># [m/s]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">min_speed</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span>  <span class="c1"># [m/s]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">max_yaw_rate</span> <span class="o">=</span> <span class="mf">40.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>  <span class="c1"># [rad/s]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">max_accel</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># [m/ss]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">max_delta_yaw_rate</span> <span class="o">=</span> <span class="mf">40.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>  <span class="c1"># [rad/ss]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">v_resolution</span> <span class="o">=</span> <span class="mf">0.01</span>  <span class="c1"># [m/s]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">yaw_rate_resolution</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>  <span class="c1"># [rad/s]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># [s] Time tick for motion prediction</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">predict_time</span> <span class="o">=</span> <span class="mf">3.0</span>  <span class="c1"># [s]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">to_goal_cost_gain</span> <span class="o">=</span> <span class="mf">0.15</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">speed_cost_gain</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">obstacle_cost_gain</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">robot_stuck_flag_cons</span> <span class="o">=</span> <span class="mf">0.001</span>  <span class="c1"># constant to prevent robot stucked</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">robot_type</span> <span class="o">=</span> <span class="n">RobotType</span><span class="o">.</span><span class="n">circle</span>
+
+    <span class="c1"># if robot_type == RobotType.circle</span>
+    <span class="c1"># Also used to check if goal is reached in both types</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">robot_radius</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># [m] for collision check</span>
+
+    <span class="c1"># if robot_type == RobotType.rectangle</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">robot_width</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># [m] for collision check</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">robot_length</span> <span class="o">=</span> <span class="mf">1.2</span>  <span class="c1"># [m] for collision check</span>
+    <span class="c1"># obstacles [x(m) y(m), ....]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">11.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">13.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">15.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">13.0</span><span class="p">,</span> <span class="mf">13.0</span><span class="p">]</span>
+               <span class="p">])</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">robot_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_robot_type</span>
+
+  <span class="nd">@robot_type</span><span class="o">.</span><span class="n">setter</span>
+  <span class="k">def</span> <span class="nf">robot_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">RobotType</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;robot_type must be an instance of RobotType&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_robot_type</span> <span class="o">=</span> <span class="n">value</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>运动方程<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>状态<span class="math notranslate nohighlight">\(\mathbf{x}\)</span>：位置<span class="math notranslate nohighlight">\(x\)</span>（m）、位置<span class="math notranslate nohighlight">\(y\)</span>（m）、航向角<span class="math notranslate nohighlight">\(\theta\)</span>（rad）、速度<span class="math notranslate nohighlight">\(v\)</span>（m/s）、角速度<span class="math notranslate nohighlight">\(\omega\)</span>（rad/s）。</p>
+<p>控制量<span class="math notranslate nohighlight">\(\mathbf{u}\)</span>：加速度、角速度。</p>
+<p>这里假设车辆（近似）在<span class="math notranslate nohighlight">\(\Delta t\)</span>间隔内的速度与角速度是常数：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+x = x + v \Delta t\cos(\theta) \\
+y = y + v \Delta t\sin(\theta) \\
+\theta = \theta + \omega \Delta t
+\end{split}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">motion</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  motion model</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">dt</span> <span class="c1"># 航向角</span>
+  <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">dt</span> <span class="c1"># 位置x</span>
+  <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">dt</span> <span class="c1"># 位置y</span>
+  <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># 加速度</span>
+  <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># 角速度</span>
+
+  <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>轨迹预测<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict_trajectory</span><span class="p">(</span><span class="n">x_init</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;predict trajectory with an input</span>
+<span class="sd">  @v, 加速度</span>
+<span class="sd">  @y, 角速度</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_init</span><span class="p">)</span>
+  <span class="n">trajectory</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+  <span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">while</span> <span class="n">time</span> <span class="o">&lt;=</span> <span class="n">config</span><span class="o">.</span><span class="n">predict_time</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">motion</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">config</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span>
+    <span class="n">trajectory</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">trajectory</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+    <span class="n">time</span> <span class="o">+=</span> <span class="n">config</span><span class="o">.</span><span class="n">dt</span>
+
+  <span class="k">return</span> <span class="n">trajectory</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>运动轨迹模拟<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>假设车辆初始时刻所有状态为0，然后以<span class="math notranslate nohighlight">\(10m/s^2\)</span>的加速度和<span class="math notranslate nohighlight">\(30^\circ/s\)</span>的角速度行驶3秒钟：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">30</span><span class="p">)])</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+<span class="c1"># config.dt = 0.01 # Unit: second</span>
+<span class="n">config</span><span class="o">.</span><span class="n">predict_time</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">x_hst</span> <span class="o">=</span> <span class="n">predict_trajectory</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">config</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_hst</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">x_hst</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/dynamic_window_approach_9_0.png" src="../../_images/dynamic_window_approach_9_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>动态窗口确定动作搜索空间<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>车辆本身运动参数<span class="math notranslate nohighlight">\(v, \omega\)</span>（速度，角速度）集合<span class="math notranslate nohighlight">\(V_s\)</span>：<span class="math notranslate nohighlight">\([v_{max}, v_{min}, \omega_{max}, \omega_{min}]\)</span></p>
+<p>动态窗口运动参数集合<span class="math notranslate nohighlight">\(V_d\)</span>：<span class="math notranslate nohighlight">\([v'_{max}, v'_{min}, \omega'_{max}, \omega'_{min}]\)</span>，其中<span class="math notranslate nohighlight">\(v'_{max} = v + a_{max} \Delta t\)</span>，<span class="math notranslate nohighlight">\(v'_{min} = v - a_{max} \Delta t\)</span>，角速度变化范围类似。公式如下：</p>
+<div class="math notranslate nohighlight">
+\[
+V_{d}=\left\{(v, \omega) \mid v \in \left[v_{a}-\dot{v} \cdot t, v_{a}+\dot{v} \cdot t\right],\quad \omega \in \left[\omega_{a}-\dot{\omega} \cdot t, \omega_{a}+\dot{\omega} \cdot t\right]\right\}
+\]</div>
+<p>算法搜索的动态空间为两者交集：</p>
+<div class="math notranslate nohighlight">
+\[
+V_{r}=V_{s} \cap V_{d}
+\]</div>
+<p><code class="docutils literal notranslate"><span class="pre">calc_dynamic_window()</span></code>，当给定状态<span class="math notranslate nohighlight">\(x\)</span>时，根据所定义的机器人的最大加速度和最大转向加速度，给出一个缩小的动作空间<code class="docutils literal notranslate"><span class="pre">dw</span></code>，它是由机器人自身扭力矩大小所完全确定的，下一时刻所能到达的动作空间，大大提高了搜索速度。</p>
+<blockquote>
+<div><p>该窗口仅包含下一个时间间隔内可以达到的速度，动态窗口外的所有轨迹都不能在下一个时间间隔内达到，因此可以不考虑避障。</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_dynamic_window</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  calculation dynamic window based on current state x</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="c1"># Dynamic window from robot specification</span>
+  <span class="n">Vs</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">min_speed</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span>
+      <span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">max_yaw_rate</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">max_yaw_rate</span><span class="p">]</span>
+
+  <span class="c1"># Dynamic window from motion model</span>
+  <span class="n">Vd</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">config</span><span class="o">.</span><span class="n">max_accel</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
+      <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">max_accel</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
+      <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">-</span> <span class="n">config</span><span class="o">.</span><span class="n">max_delta_yaw_rate</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
+      <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">max_delta_yaw_rate</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">dt</span><span class="p">]</span>
+
+  <span class="c1">#  [v_min, v_max, yaw_rate_min, yaw_rate_max]</span>
+  <span class="n">dw</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">Vs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Vd</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">min</span><span class="p">(</span><span class="n">Vs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">Vd</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+      <span class="nb">max</span><span class="p">(</span><span class="n">Vs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">Vd</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">min</span><span class="p">(</span><span class="n">Vs</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">Vd</span><span class="p">[</span><span class="mi">3</span><span class="p">])]</span>
+
+  <span class="k">return</span> <span class="n">dw</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>轨迹目标函数<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>目标函数包含三部分：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L} = \alpha \mathcal{L}_{\text{obstacle}} + \beta \mathcal{L}_{\text{speed}} + \gamma \mathcal{L}_{\text{goal}} 
+\]</div>
+<div class="section" id="id6">
+<h3>距离代价<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>车辆行驶过程中距离障碍物越远越好：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathcal{L}_\text{obstacle} = \left\{\begin{matrix}
+\infty, &amp; \quad \text{any}(r)&lt;0 \\
+1/\min(r), &amp; \quad \text{other}
+\end{matrix}\right.
+\end{split}\]</div>
+<p>计算轨迹点和障碍物的距离：</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">a[:,</span> <span class="pre">None]</span></code>扩展第二维度为1。例如<code class="docutils literal notranslate"><span class="pre">a.shape=(3,2)</span></code>，那么<code class="docutils literal notranslate"><span class="pre">a[:,</span> <span class="pre">None].shape=(3,1,2)</span></code></p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 障碍物坐标，数量为3</span>
+<span class="n">ob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+         <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]])</span>
+<span class="n">ox</span> <span class="o">=</span> <span class="n">ob</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># shape: (3,)</span>
+<span class="n">oy</span> <span class="o">=</span> <span class="n">ob</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># shape: (3,)</span>
+
+<span class="c1"># 历史轨迹，数量为5</span>
+<span class="n">config</span><span class="o">.</span><span class="n">predict_time</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="mi">5</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">trajectory</span> <span class="o">=</span> <span class="n">predict_trajectory</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">config</span><span class="p">)</span>
+
+<span class="c1"># ox[:, None]扩展了ox的shape为(3, 1)</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ox</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="n">dy</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">oy</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">trajectory</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">ox</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dx</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5,) (3, 1) (3, 5)
+</pre></div>
+</div>
+</div>
+</div>
+<p>结果显示<code class="docutils literal notranslate"><span class="pre">dx.shape=(3,5)</span></code>，表示3个障碍物分别和5个轨迹点的x距离。</p>
+<p><strong>(a) 如果车辆是圆形</strong>，直接计算hypotenuse（<span class="math notranslate nohighlight">\(r = \sqrt{dx^2 + dy^2}\)</span>）：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
+<span class="n">r</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3, 5)
+</pre></div>
+</div>
+</div>
+</div>
+<p>根据公式计算距离代价：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span> <span class="o">&lt;=</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_radius</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+  <span class="n">Lo</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="n">Lo</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cost of obstacle is:&quot;</span><span class="p">,</span> <span class="n">Lo</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cost of obstacle is: 0.7071067811865475
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>(b) 如果车辆是长方形</strong>，需要考虑车辆方向，首先计算出每个轨迹点方向的旋转矩阵：</p>
+<p><img alt="" src="https://images-picgo.oss-cn-shanghai.aliyuncs.com/images/Colab/20210813185146.png" /></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">yaw</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="c1"># 构建旋转矩阵</span>
+<span class="n">rot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw</span><span class="p">)],</span>
+          <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw</span><span class="p">)]])</span>
+<span class="c1"># shape: (2, 2, n) =&gt; (n, 2, 2)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Before transpose, the shape is:&quot;</span><span class="p">,</span> <span class="n">rot</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">rot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">rot</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;After transpose, the shape is:&quot;</span><span class="p">,</span> <span class="n">rot</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Before transpose, the shape is: (2, 2, 5)
+After transpose, the shape is: (5, 2, 2)
+</pre></div>
+</div>
+</div>
+</div>
+<p>然后计算所有障碍物分别在每个轨迹点车辆坐标系下的距离，分为2步：</p>
+<ol class="simple">
+<li><p>计算障碍物在原点坐标系下和每个轨迹点的距离（不考虑旋转）<span class="math notranslate nohighlight">\((dx, dy)\)</span></p></li>
+<li><p>将<span class="math notranslate nohighlight">\(dx, dy\)</span>转换到每个轨迹点车辆坐标系下表示：<span class="math notranslate nohighlight">\(R \cdot [dx, dy]^T\)</span></p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. 计算障碍物在原点坐标系下和每个轨迹点的距离（不考虑旋转）</span>
+<span class="c1"># shape: (5, 3, 2) = (5, 1, 2) - (3, 2)</span>
+<span class="n">local_ob</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">ob</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">local_ob</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># 2. 将障碍物距离转换到车辆坐标系下(3, 5, 2) @ (5, 2, 2)</span>
+<span class="n">local_ob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">l</span> <span class="o">@</span> <span class="n">x</span> <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">local_ob</span><span class="p">,</span> <span class="n">rot</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">local_ob</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5, 3, 2)
+(5, 3, 2)
+</pre></div>
+</div>
+</div>
+</div>
+<p>结果<code class="docutils literal notranslate"><span class="pre">(5,</span> <span class="pre">3,</span> <span class="pre">2)</span></code>为3个障碍物分别在5个轨迹点坐标系下的表示。</p>
+<p>最后在自己坐标系下直接和本车长宽比较就可以了。</p>
+<p>这一节所有代码封装至<code class="docutils literal notranslate"><span class="pre">calc_obstacle_cost()</span></code>函数中：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_obstacle_cost</span><span class="p">(</span><span class="n">trajectory</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  calc obstacle cost inf: collision</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">ox</span> <span class="o">=</span> <span class="n">ob</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+  <span class="n">oy</span> <span class="o">=</span> <span class="n">ob</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+  <span class="n">dx</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ox</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+  <span class="n">dy</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">oy</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+  <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_type</span> <span class="o">==</span> <span class="n">RobotType</span><span class="o">.</span><span class="n">rectangle</span><span class="p">:</span>
+    <span class="n">yaw</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># 构建旋转矩阵</span>
+    <span class="n">rot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw</span><span class="p">)],</span>
+              <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw</span><span class="p">)]])</span>
+    <span class="c1"># shape: (2, 2, n) =&gt; (n, 2, 2)</span>
+    <span class="n">rot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">rot</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> 
+    
+    <span class="n">local_ob</span> <span class="o">=</span> <span class="n">ob</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">trajectory</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">local_ob</span> <span class="o">=</span> <span class="n">local_ob</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">local_ob</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">local_ob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">local_ob</span> <span class="o">@</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">rot</span><span class="p">])</span>
+
+    <span class="c1"># 1. 计算障碍物在原点坐标系下和每个轨迹点的距离（不考虑旋转）</span>
+    <span class="c1"># n_t: number of trajectory; n_o: number of obstacles</span>
+    <span class="c1"># shape: (n_t, n_o, 2) = (n_t, 1, 2) - (n_o, 2)</span>
+    <span class="n">local_ob</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">ob</span>
+    <span class="c1"># 2. 将障碍物距离转换到车辆坐标系下，每次循环：(n_o, 2) X (2, 2)</span>
+    <span class="n">local_ob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">l</span> <span class="o">@</span> <span class="n">x</span> <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">local_ob</span><span class="p">,</span> <span class="n">rot</span><span class="p">)])</span>
+    <span class="c1"># shape (n_t, n_o, 2) =&gt; (n_t*n_o, 2)</span>
+    <span class="n">local_ob</span> <span class="o">=</span> <span class="n">local_ob</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">local_ob</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">upper_check</span> <span class="o">=</span> <span class="n">local_ob</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_length</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">right_check</span> <span class="o">=</span> <span class="n">local_ob</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_width</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">bottom_check</span> <span class="o">=</span> <span class="n">local_ob</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">robot_length</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">left_check</span> <span class="o">=</span> <span class="n">local_ob</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">robot_width</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">upper_check</span><span class="p">,</span> <span class="n">right_check</span><span class="p">),</span>
+               <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">bottom_check</span><span class="p">,</span> <span class="n">left_check</span><span class="p">)))</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+      <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_type</span> <span class="o">==</span> <span class="n">RobotType</span><span class="o">.</span><span class="n">circle</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span> <span class="o">&lt;=</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_radius</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+
+  <span class="n">min_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+  <span class="k">return</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">min_r</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id7">
+<h3>目标方向代价<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p><img alt="" src="https://images-picgo.oss-cn-shanghai.aliyuncs.com/images/Colab/20210813185623.png" /></p>
+<p>行进方向与目标方向的夹角越小越好。</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_\text{goal} = |\Delta \theta|
+\]</div>
+<p>需要注意的是<span class="math notranslate nohighlight">\(\Delta \theta\)</span>有可能超过180度，所以需要取180度的余数<code class="docutils literal notranslate"><span class="pre">abs(cost_angle)</span> <span class="pre">%</span> <span class="pre">np.pi</span></code>，也有代码中使用下面这种方式取余数：</p>
+<p><span class="math notranslate nohighlight">\(cost = \arctan2(\sin(\theta), \cos(\theta))\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_to_goal_cost</span><span class="p">(</span><span class="n">trajectory</span><span class="p">,</span> <span class="n">goal</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;calc to goal cost with angle difference</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">dx</span> <span class="o">=</span> <span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">trajectory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># 取轨迹最后一个点</span>
+  <span class="n">dy</span> <span class="o">=</span> <span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">trajectory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+  <span class="n">goal_angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">dy</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span> <span class="c1"># 目标角度</span>
+  <span class="n">cost_angle</span> <span class="o">=</span> <span class="n">goal_angle</span> <span class="o">-</span> <span class="n">trajectory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1"># 减去当前车辆航向角</span>
+  <span class="c1"># OR：cost = abs(cost_angle) % np.pi</span>
+  <span class="n">cost</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">cost_angle</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">cost_angle</span><span class="p">)))</span>
+  <span class="k">return</span> <span class="n">cost</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id8">
+<h4>模拟实验<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
+<p>假设目标点为(20, 20)，轨迹最后一个点为(10, 10)，航向角为45度，那么差值应该为0：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">trajectory</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">45</span><span class="p">)]])</span>
+<span class="n">goal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">])</span>
+<span class="n">calc_to_goal_cost</span><span class="p">(</span><span class="n">trajectory</span><span class="p">,</span> <span class="n">goal</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id9">
+<h3>速度代价<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>这一项最简单，也就是车辆速度越大越好：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_\text{speed} = V_{max} - V
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">trajectory</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">45</span><span class="p">),</span> <span class="mi">0</span><span class="p">]])</span> <span class="c1"># 第四项为速度</span>
+
+<span class="n">config</span><span class="o">.</span><span class="n">max_speed</span> <span class="o">-</span> <span class="n">trajectory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.0
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id10">
+<h2>遍历搜索<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<p>至此，当给定状态x、一个动态窗口dw、目标位置、障碍物位置时，只需要对动态窗口dw内的动作空间（速度<span class="math notranslate nohighlight">\(v\)</span>和角速度<span class="math notranslate nohighlight">\(\omega\)</span>）进行遍历，计算出每一个可能的动作在未来一段时间内所产生的轨迹，并在所有轨迹里找出一条评价最高的轨迹，返回最佳动作和最佳轨迹。</p>
+<div class="section" id="id11">
+<h3>防止陷入局部最优<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>一般情况下车辆应该朝着目标方向前进，但是当前方有障碍物时并且车辆朝向指向目标，此时一种可能的局部最优解：速度为0、方向为0（即角速度为0），此时强制让车辆调整朝向，代码如下：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_stuck_flag_cons</span> \
+  <span class="n">omega</span> <span class="o">&lt;</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_stuck_flag_cons</span><span class="p">:</span>
+  <span class="n">omega</span> <span class="o">=</span> <span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">max_delta_yaw_rate</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_control_and_trajectory</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dw</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">ob</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  calculation final input with dynamic window</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">x_init</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:]</span>
+  <span class="n">min_cost</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+  <span class="n">best_u</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+  <span class="n">best_trajectory</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
+
+  <span class="c1"># evaluate all trajectory with sampled input in dynamic window</span>
+  <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dw</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dw</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">config</span><span class="o">.</span><span class="n">v_resolution</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dw</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">dw</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">config</span><span class="o">.</span><span class="n">yaw_rate_resolution</span><span class="p">):</span>
+      <span class="n">trajectory</span> <span class="o">=</span> <span class="n">predict_trajectory</span><span class="p">(</span><span class="n">x_init</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+      <span class="c1"># calc cost</span>
+      <span class="n">to_goal_cost</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">to_goal_cost_gain</span> <span class="o">*</span> <span class="n">calc_to_goal_cost</span><span class="p">(</span><span class="n">trajectory</span><span class="p">,</span> <span class="n">goal</span><span class="p">)</span>
+      <span class="n">speed_cost</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">speed_cost_gain</span> <span class="o">*</span> <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">max_speed</span> <span class="o">-</span> <span class="n">trajectory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+      <span class="n">ob_cost</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">obstacle_cost_gain</span> <span class="o">*</span> <span class="n">calc_obstacle_cost</span><span class="p">(</span><span class="n">trajectory</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+
+      <span class="n">final_cost</span> <span class="o">=</span> <span class="n">to_goal_cost</span> <span class="o">+</span> <span class="n">speed_cost</span> <span class="o">+</span> <span class="n">ob_cost</span>
+
+      <span class="c1"># search minimum trajectory</span>
+      <span class="k">if</span> <span class="n">min_cost</span> <span class="o">&gt;=</span> <span class="n">final_cost</span><span class="p">:</span>
+        <span class="n">min_cost</span> <span class="o">=</span> <span class="n">final_cost</span>
+        <span class="n">best_u</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
+        <span class="n">best_trajectory</span> <span class="o">=</span> <span class="n">trajectory</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">best_u</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_stuck_flag_cons</span> \
+          <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_stuck_flag_cons</span><span class="p">:</span>
+          <span class="c1"># to ensure the robot do not get stuck in</span>
+          <span class="c1"># best v=0 m/s (in front of an obstacle) and</span>
+          <span class="c1"># best omega=0 rad/s (heading to the goal with</span>
+          <span class="c1"># angle difference of 0)</span>
+          <span class="n">best_u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">max_delta_yaw_rate</span>
+  <span class="k">return</span> <span class="n">best_u</span><span class="p">,</span> <span class="n">best_trajectory</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id12">
+<h2>初始化<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<p>初始化状态x：位置x（m）、位置y（m）、航向角yaw（rad）、速度v（m/s）、角速度w（rad/s）</p>
+<p>目标位置goal：gx，gy</p>
+<p>仿真参数config：最大/最小速度、拐弯半径、障碍物等</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initial state [x(m), y(m), yaw(rad), v(m/s), omega(rad/s)]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="c1"># goal position [x(m), y(m)]</span>
+<span class="n">goal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">])</span>
+
+<span class="c1"># input [forward speed, yaw_rate]</span>
+<span class="n">config</span><span class="o">.</span><span class="n">robot_type</span> <span class="o">=</span> <span class="n">RobotType</span><span class="o">.</span><span class="n">circle</span>
+<span class="n">trajectory</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>障碍物位置：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ob</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">ob</span> <span class="c1"># obstacles [[x(m) y(m)], ....]</span>
+<span class="n">ob</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[-1., -1.],
+       [ 0.,  2.],
+       [ 4.,  2.],
+       [ 5.,  4.],
+       [ 5.,  5.],
+       [ 5.,  6.],
+       [ 5.,  9.],
+       [ 8.,  9.],
+       [ 7.,  9.],
+       [ 8., 10.],
+       [ 9., 11.],
+       [12., 13.],
+       [12., 12.],
+       [15., 15.],
+       [13., 13.]])
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id13">
+<h2>模拟实验<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_arrow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yaw</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">length</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw</span><span class="p">),</span> <span class="n">length</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw</span><span class="p">),</span>
+       <span class="n">head_length</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">head_width</span><span class="o">=</span><span class="n">width</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">plot_robot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yaw</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+  <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_type</span> <span class="o">==</span> <span class="n">RobotType</span><span class="o">.</span><span class="n">rectangle</span><span class="p">:</span>
+    <span class="n">outline</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">robot_length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">robot_length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">robot_length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">robot_length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">robot_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="o">-</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">robot_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">robot_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]])</span>
+    <span class="n">Rot1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw</span><span class="p">)],</span>
+              <span class="p">[</span><span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw</span><span class="p">)]])</span>
+    <span class="n">outline</span> <span class="o">=</span> <span class="p">(</span><span class="n">outline</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Rot1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">outline</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">x</span>
+    <span class="n">outline</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">y</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">outline</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+         <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">outline</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="s2">&quot;-k&quot;</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_type</span> <span class="o">==</span> <span class="n">RobotType</span><span class="o">.</span><span class="n">circle</span><span class="p">:</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_radius</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+    <span class="n">out_x</span><span class="p">,</span> <span class="n">out_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span> <span class="o">+</span>
+              <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw</span><span class="p">)])</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_radius</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">out_x</span><span class="p">],</span> <span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">out_y</span><span class="p">],</span> <span class="s2">&quot;-k&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython</span> <span class="kn">import</span> <span class="n">display</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">gx</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">gy</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">robot_type</span><span class="o">=</span><span class="n">RobotType</span><span class="o">.</span><span class="n">circle</span><span class="p">):</span>
+  <span class="c1"># initial state [x(m), y(m), yaw(rad), v(m/s), omega(rad/s)]</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+  <span class="c1"># goal position [x(m), y(m)]</span>
+  <span class="n">goal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">gx</span><span class="p">,</span> <span class="n">gy</span><span class="p">])</span>
+
+  <span class="c1"># input [forward speed, yaw_rate]</span>
+
+  <span class="n">config</span><span class="o">.</span><span class="n">robot_type</span> <span class="o">=</span> <span class="n">robot_type</span>
+  <span class="n">trajectory</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+  <span class="n">ob</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">ob</span>
+
+  <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+  <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">dw</span> <span class="o">=</span> <span class="n">calc_dynamic_window</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    <span class="n">u</span><span class="p">,</span> <span class="n">predicted_trajectory</span> <span class="o">=</span> <span class="n">calc_control_and_trajectory</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dw</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">ob</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">motion</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span>  <span class="c1"># simulate robot</span>
+    <span class="n">trajectory</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">trajectory</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>  <span class="c1"># store state history</span>
+
+    <span class="k">if</span> <span class="n">show_animation</span><span class="p">:</span>
+      <span class="n">plt</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
+      <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">predicted_trajectory</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">predicted_trajectory</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;-g&quot;</span><span class="p">)</span>
+      <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;xr&quot;</span><span class="p">)</span>
+      <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;xb&quot;</span><span class="p">)</span>
+      <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ob</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ob</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;ok&quot;</span><span class="p">)</span>
+      <span class="n">plot_robot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">config</span><span class="p">)</span>
+      <span class="n">plot_arrow</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+      <span class="n">display</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+      <span class="n">display</span><span class="o">.</span><span class="n">clear_output</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># check reaching goal</span>
+    <span class="n">dist_to_goal</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">dist_to_goal</span> <span class="o">&lt;=</span> <span class="n">config</span><span class="o">.</span><span class="n">robot_radius</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Goal!!&quot;</span><span class="p">)</span>
+      <span class="k">break</span>
+
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done&quot;</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">show_animation</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trajectory</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">trajectory</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;-r&quot;</span><span class="p">)</span>
+    <span class="n">display</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="n">display</span><span class="o">.</span><span class="n">clear_output</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main</span><span class="p">(</span><span class="n">robot_type</span><span class="o">=</span><span class="n">RobotType</span><span class="o">.</span><span class="n">rectangle</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/dynamic_window_approach_42_0.png" src="../../_images/dynamic_window_approach_42_0.png" />
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="numpybroadcast">
+<h2>附录：Numpy中的Broadcast<a class="headerlink" href="#numpybroadcast" title="Permalink to this headline">¶</a></h2>
+<p>Numpy中，当运算符两边变量的shape不满足运算符要求时，在满足一些规则下，Numpy会启动Broadcast，例如下面<span class="math notranslate nohighlight">\(a-b\)</span>：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[-1. -1. -1.]
+ [-1. -1. -1.]
+ [-1. -1. -1.]] 
+
+ [[1. 1. 1.]
+ [1. 1. 1.]
+ [1. 1. 1.]] 
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>((3, 3), (1,), (3, 3), (3, 3))
+</pre></div>
+</div>
+</div>
+</div>
+<p>当<span class="math notranslate nohighlight">\(a, b\)</span>的shape一样时，<span class="math notranslate nohighlight">\(a-b\)</span>为element-wise。</p>
+<p>当<span class="math notranslate nohighlight">\(a,b\)</span>维度不相等时候，例如<code class="docutils literal notranslate"><span class="pre">a1</span> <span class="pre">=</span> <span class="pre">a[:,</span> <span class="pre">None]</span></code>维度从<span class="math notranslate nohighlight">\(3\times3\)</span>变为了<span class="math notranslate nohighlight">\(3\times 1 \times 3\)</span>，那么<span class="math notranslate nohighlight">\(a1-b\)</span>就用到了Broadcast性质，即<span class="math notranslate nohighlight">\(a1\)</span>的第一行（其shape为<span class="math notranslate nohighlight">\(1 \times 3\)</span>）分别减<span class="math notranslate nohighlight">\(b\)</span>的每一行（每个shape都为<span class="math notranslate nohighlight">\(1 \times 3\)</span>），然后<span class="math notranslate nohighlight">\(a1\)</span>的第二行、第三行……</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">a1</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">a1</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">a1</span><span class="o">-</span><span class="n">b</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3, 1, 3) (3, 3) (3, 3, 3) 
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[[ 1., -1., -2.],
+        [-2., -4., -5.],
+        [-5., -7., -8.]],
+
+       [[ 0.,  0., -2.],
+        [-3., -3., -5.],
+        [-6., -6., -8.]],
+
+       [[ 0., -1., -1.],
+        [-3., -4., -4.],
+        [-6., -7., -7.]]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>所以<span class="math notranslate nohighlight">\(a1, b\)</span>第一维也不需要相等（这里分别是5和3），只需要保证相减的维度是一样的，这里是<span class="math notranslate nohighlight">\((1\times 3) - 3\times (1 \times 3)\)</span>：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">a1</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">a1</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">a1</span><span class="o">-</span><span class="n">b</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5, 1, 3) (3, 3) (5, 3, 3) 
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[[ 1., -1., -2.],
+        [-2., -4., -5.],
+        [-5., -7., -8.]],
+
+       [[ 0.,  0., -2.],
+        [-3., -3., -5.],
+        [-6., -6., -8.]],
+
+       [[ 0., -1., -1.],
+        [-3., -4., -4.],
+        [-6., -7., -7.]],
+
+       [[ 0., -1., -2.],
+        [-3., -4., -5.],
+        [-6., -7., -8.]],
+
+       [[ 0., -1., -2.],
+        [-3., -4., -5.],
+        [-6., -7., -8.]]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>同理<span class="math notranslate nohighlight">\(b-a1\)</span>和<span class="math notranslate nohighlight">\(a1-b\)</span>的结果只差个正负号：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">a1</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">a1</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a1</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5, 1, 3) (3, 3) (5, 3, 3) 
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[[-1.,  1.,  2.],
+        [ 2.,  4.,  5.],
+        [ 5.,  7.,  8.]],
+
+       [[ 0.,  0.,  2.],
+        [ 3.,  3.,  5.],
+        [ 6.,  6.,  8.]],
+
+       [[ 0.,  1.,  1.],
+        [ 3.,  4.,  4.],
+        [ 6.,  7.,  7.]],
+
+       [[ 0.,  1.,  2.],
+        [ 3.,  4.,  5.],
+        [ 6.,  7.,  8.]],
+
+       [[ 0.,  1.,  2.],
+        [ 3.,  4.,  5.],
+        [ 6.,  7.,  8.]]])
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./Self-driving/PathPlanning"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+    <a class='left-prev' id="prev-link" href="README.html" title="previous page">Path Planning</a>
+    <a class='right-next' id="next-link" href="../../Open3D/ICP.html" title="next page">ICP</a>
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Austin.Dawei<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>
