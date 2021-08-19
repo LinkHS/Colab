@@ -15,11 +15,17 @@ parts:
     - file: IMU/Lidar_with_rotation.ipynb
     - file: IMU/SO3_SE3_spatialmath.ipynb
 
-  - caption: Kalmanfilter
+  - caption: Kalman filter
     chapters:
     - file: Kalmanfilter/Kalmanfilter_basics.ipynb
     - file: Kalmanfilter/extended_kalman_filter_localization.ipynb
     - file: Kalmanfilter/unscented_kalman_filter.ipynb
+
+  - caption: Self Driving
+    chapters:
+    - file: Self-driving/PathPlanning/README.md
+      sections:
+      - file: Self-driving/PathPlanning/dynamic_window_approach.ipynb
 
   - caption: 3D Tools
     chapters:
@@ -27,3 +33,7 @@ parts:
     - file: Open3D/Open3D_visualization.ipynb
     - file: 3D_tools/pytransform3d.ipynb
     - file: matplotlib/mplot3d.ipynb
+
+  - caption: Test
+    chapters:
+    - file: temp/dj.ipynb
